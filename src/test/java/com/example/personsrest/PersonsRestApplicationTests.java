@@ -1,0 +1,104 @@
+package com.example.personsrest;
+
+import com.example.personsrest.domain.Person;
+import com.example.personsrest.domain.PersonRepository;
+import com.example.personsrest.remote.GroupRemote;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.domain.*;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+class PersonsRestApplicationTests {
+    @LocalServerPort
+    int port;
+
+    @Autowired
+    WebTestClient webTestClient;
+
+    @MockBean
+    PersonRepository personRepository;
+
+    @MockBean
+    GroupRemote groupRemote;
+
+    @BeforeEach
+    void setUp() {
+
+
+    }
+
+    @Test
+    void test_get_persons_success() {
+        // Given
+        Person person1 = mock(Person.class);
+        when(person1.getName()).thenReturn("Arne Anka");
+        String groupId = UUID.randomUUID().toString();
+        when(person1.getGroups()).thenReturn(List.of(groupId));
+        when(personRepository.findAll()).thenReturn(List.of(person1));
+        when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
+
+        // When
+        List<Person> persons = webTestClient.get().uri("/persons")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .returnResult(Person.class)
+                .getResponseBody()
+                .collectList()
+                .block();
+
+        // Then
+        assertEquals(1, persons.size());
+        assertEquals("Arne Anka", persons.get(0).getName());
+        assertEquals("Ankeborgare", persons.get(0).getGroups().get(0));
+        verify(groupRemote, times(1)).getNameById(eq(groupId));
+    }
+
+    // skapa ny person
+    // hämta en person
+    // updater en person
+    // radera en person
+    // lägg till en grupp
+    // ta bort en grupp
+
+    @Test
+    void test_get_persons_filter_by_name_success() {
+        // Given
+        Person person1 = mock(Person.class);
+        Page<Person> page = new PageImpl<>(List.of(person1));
+        when(personRepository.findAllByNameContainingOrCityContaining(eq("Arne"), eq("Arne"),
+                any(PageRequest.class))).thenReturn(page);
+
+        // When
+        List<Person> persons = webTestClient.get().uri("/persons?search=Arne&pagenumber=0&pagesize=10")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .returnResult(Person.class)
+                .getResponseBody()
+                .collectList()
+                .block();
+
+        // Then
+        assertEquals(1, persons.size());
+    }
+
+}
