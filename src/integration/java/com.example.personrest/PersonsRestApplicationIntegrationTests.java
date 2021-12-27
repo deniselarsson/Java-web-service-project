@@ -1,5 +1,6 @@
 package com.example.personrest;
 
+import com.example.personsrest.PersonAPI;
 import com.example.personsrest.domain.Person;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
@@ -39,6 +40,8 @@ public class PersonsRestApplicationIntegrationTests {
     @Autowired
     GroupRemote groupRemote;
 
+    PersonAPIInegration personAPIInegration;
+
     @BeforeEach
     void setUp() {
 
@@ -53,8 +56,8 @@ public class PersonsRestApplicationIntegrationTests {
     @Test
     void test_get_persons_success() {
         // Given
-        PersonDTO person1 = createPerson("Arne Anka", "Ankeborg", 100);
-        person1 = addGroup(person1, "Ankeborgare");
+        PersonAPIInegration.PersonDTO person1 = personAPIInegration.createPerson("Arne Anka", "Ankeborg", 100);
+        person1 = personAPIInegration.addGroup(person1, "Ankeborgare");
 
         // When
         List<Person> persons = webTestClient.get().uri("/persons")
@@ -73,42 +76,7 @@ public class PersonsRestApplicationIntegrationTests {
         assertEquals("Ankeborgare", persons.get(0).getGroups().get(0));
     }
 
-    private PersonDTO addGroup(PersonDTO person1, String groupName) {
-        return webTestClient.get().uri("/persons/" + person1.getId() + "/addGroup?name="+ groupName)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .returnResult(PersonDTO.class)
-                .getResponseBody()
-                .blockLast();
-    }
 
-    public PersonDTO createPerson(String name, String city, int age) {
-        return webTestClient.post().uri("/persons")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new CreatePerson(name, city, age))
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .returnResult(PersonDTO.class)
-                .getResponseBody()
-                .blockLast();
-    }
-
-    public PersonDTO updatePerson(String id, String name, String city, int age) {
-        return webTestClient.post().uri("/update" + id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UpdatePerson(name, city, age))
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .returnResult(PersonDTO.class)
-                .getResponseBody()
-                .blockLast();
-    }
 
     @Test
     void test_get_persons_filter_by_name_success() {
@@ -126,29 +94,6 @@ public class PersonsRestApplicationIntegrationTests {
                 .expectBody()
                 .jsonPath("$.name").isNotEmpty()
                 .jsonPath("$.name").isEqualTo("test-webclient-repository");
-    }
-
-    @Value
-    static class CreatePerson {
-        String name;
-        String city;
-        int age;
-    }
-
-    @Value
-    static class UpdatePerson{
-        String name;
-        String city;
-        int age;
-    }
-
-    @Value
-    static class PersonDTO {
-        String id;
-        String name;
-        String city;
-        int age;
-        List<String> groups;
     }
 
 }

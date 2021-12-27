@@ -20,6 +20,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -41,7 +42,7 @@ class PersonsRestApplicationTests {
     @MockBean
     GroupRemote groupRemote;
 
-    PersonsRestApplicationIntegrationTests personApi;
+    PersonAPI personApi;
 
     @BeforeEach
     void setUp() {
@@ -60,13 +61,7 @@ class PersonsRestApplicationTests {
         when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
 
         // When
-        List<Person> persons = webTestClient.get().uri("/persons")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .returnResult(Person.class)
-                .getResponseBody()
+        List<PersonAPI.PersonDTO> persons = personApi.all()
                 .collectList()
                 .block();
 
@@ -77,7 +72,6 @@ class PersonsRestApplicationTests {
         verify(groupRemote, times(1)).getNameById(eq(groupId));
     }
 
-    // hämta en person
     @Test
     void test_get_person_success() {
         // Given
@@ -85,56 +79,61 @@ class PersonsRestApplicationTests {
         when(personRepository.findAll()).thenReturn(List.of(person1));
 
         // When
-        List<Person> persons = webTestClient.get().uri("/persons")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .returnResult(Person.class)
-                .getResponseBody()
-                .collectList()
+        PersonAPI.PersonDTO person = personApi.get(person1.getId())
                 .block();
 
         // Then
-        assertEquals(1, persons.size());
-        assertEquals(person1.getId(), persons.get(0).getId());
+        assertEquals(person1.getId(), person.getId());
     }
 
-    // skapa ny person
     @Test
     void test_create_person_success() {
         // When
-        Person person = personApi.createPerson("Mia", "Johannesburg", 89);
+        PersonAPI.PersonDTO person = personApi.createPerson("Mia", "Johannesburg", 70);
 
         // Then
-        Person verifyPerson = personRepository.findAll().get();
+        Person verifyPerson = personRepository.findAll();
         assertEquals(verifyPerson.getName(), person.getName());
         assertEquals(verifyPerson.getId(), person.getId());
     }
 
-    // uppdatera en person
     @Test
-    void test_update_person_success(){
+    void test_update_person_success() {
         // Given
         Person person1 = mock(Person.class);
         when(personRepository.findById("111").thenReturn(Optional.of(person1)));
 
         //When
-        Person person = personApi.updatePerson(person1.getId(), "Sofia", null, 0);
+        PersonAPI.PersonDTO person = personApi.updatePerson(person1.getId(), "Sofia", null, 0);
 
         // Then
-        Person verifyPerson = personRepository.findById(person1.getId());
+        Optional<Person> verifyPerson = personRepository.findById(person1.getId());
         assertEquals("Sofia", person.getName());
         assertEquals("Sofia", verifyPerson.getName());
 
     }
 
-    // radera en person
+    @Test
+    void test_delete_person_success() {
+        // Given
+        Person person1 = mock(Person.class);
+        when(personRepository.findAll()).thenReturn(List.of(person1));
+
+        // When
+        personApi.deletePerson(person1.getId())
+                .block();
+
+        // Then
+        List<Person> verifyPerson = personRepository.findAll().collectList().block();
+        assertEquals(List.of("BBB", "CCC"), verifyPerson.stream().map(Person::getName).collect(Collectors.toList()));
+    }
 
 
 
     // lägg till en grupp
     // ta bort en grupp
+
+
 
     @Test
     void test_get_persons_filter_by_name_success() {
