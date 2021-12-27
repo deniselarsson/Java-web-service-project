@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integrationtest")
-class PersonsRestApplicationIntegrationTests {
+public class PersonsRestApplicationIntegrationTests {
     @LocalServerPort
     int port;
 
@@ -84,10 +84,23 @@ class PersonsRestApplicationIntegrationTests {
                 .blockLast();
     }
 
-    private PersonDTO createPerson(String name, String city, int age) {
+    public PersonDTO createPerson(String name, String city, int age) {
         return webTestClient.post().uri("/persons")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new CreatePerson(name, city, age))
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .returnResult(PersonDTO.class)
+                .getResponseBody()
+                .blockLast();
+    }
+
+    public PersonDTO updatePerson(String id, String name, String city, int age) {
+        return webTestClient.post().uri("/update" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UpdatePerson(name, city, age))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -117,6 +130,13 @@ class PersonsRestApplicationIntegrationTests {
 
     @Value
     static class CreatePerson {
+        String name;
+        String city;
+        int age;
+    }
+
+    @Value
+    static class UpdatePerson{
         String name;
         String city;
         int age;

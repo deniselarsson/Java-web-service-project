@@ -1,8 +1,10 @@
 package com.example.personsrest;
 
+import com.example.personrest.PersonsRestApplicationIntegrationTests;
 import com.example.personsrest.domain.Person;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
+import lombok.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,10 @@ import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +40,8 @@ class PersonsRestApplicationTests {
 
     @MockBean
     GroupRemote groupRemote;
+
+    PersonsRestApplicationIntegrationTests personApi;
 
     @BeforeEach
     void setUp() {
@@ -71,10 +77,62 @@ class PersonsRestApplicationTests {
         verify(groupRemote, times(1)).getNameById(eq(groupId));
     }
 
-    // skapa ny person
     // hämta en person
-    // updater en person
+    @Test
+    void test_get_person_success() {
+        // Given
+        Person person1 = mock(Person.class);
+        when(personRepository.findAll()).thenReturn(List.of(person1));
+
+        // When
+        List<Person> persons = webTestClient.get().uri("/persons")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .returnResult(Person.class)
+                .getResponseBody()
+                .collectList()
+                .block();
+
+        // Then
+        assertEquals(1, persons.size());
+        assertEquals(person1.getId(), persons.get(0).getId());
+    }
+
+    // skapa ny person
+    @Test
+    void test_create_person_success() {
+        // When
+        Person person = personApi.createPerson("Mia", "Johannesburg", 89);
+
+        // Then
+        Person verifyPerson = personRepository.findAll().get();
+        assertEquals(verifyPerson.getName(), person.getName());
+        assertEquals(verifyPerson.getId(), person.getId());
+    }
+
+    // uppdatera en person
+    @Test
+    void test_update_person_success(){
+        // Given
+        Person person1 = mock(Person.class);
+        when(personRepository.findById("111").thenReturn(Optional.of(person1)));
+
+        //When
+        Person person = personApi.updatePerson(person1.getId(), "Sofia", null, 0);
+
+        // Then
+        Person verifyPerson = personRepository.findById(person1.getId());
+        assertEquals("Sofia", person.getName());
+        assertEquals("Sofia", verifyPerson.getName());
+
+    }
+
     // radera en person
+
+
+
     // lägg till en grupp
     // ta bort en grupp
 
@@ -100,5 +158,6 @@ class PersonsRestApplicationTests {
         // Then
         assertEquals(1, persons.size());
     }
+
 
 }
