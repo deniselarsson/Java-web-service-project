@@ -3,6 +3,7 @@ package com.example.personsrest;
 import com.example.personsrest.domain.Person;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Mono;
 import java.nio.channels.MembershipKey;
 import java.util.List;
 
+@AllArgsConstructor
 public class PersonAPI {
 
     private static final String BASE_URL = "/api/persons/";
@@ -75,8 +77,8 @@ public class PersonAPI {
                 .then();
     }
 
-    public PersonDTO addGroup(PersonDTO person1, String groupName) {
-        return webTestClient.get().uri(BASE_URL + person1.getId() + "/addGroup?name=" + groupName)
+    public PersonDTO addGroup(String personId, String groupName) {
+        return webTestClient.get().uri(BASE_URL + personId + "/addGroup?name=" + groupName)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -86,6 +88,16 @@ public class PersonAPI {
                 .blockLast();
     }
 
+    public PersonDTO removeGroup(String personId, String groupId) {
+        return webTestClient.get().uri(BASE_URL + personId + "/removeGroup?id=" + groupId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .returnResult(PersonDTO.class)
+                .getResponseBody()
+                .blockLast();
+    }
 
     @Value
     static class CreatePerson {

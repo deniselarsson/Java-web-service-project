@@ -1,10 +1,8 @@
 package com.example.personsrest;
 
-import com.example.personrest.PersonsRestApplicationIntegrationTests;
 import com.example.personsrest.domain.Person;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
-import lombok.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +13,10 @@ import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,7 +43,7 @@ class PersonsRestApplicationTests {
 
     @BeforeEach
     void setUp() {
-
+        personApi = new PersonAPI(webTestClient);
 
     }
 
@@ -94,7 +90,6 @@ class PersonsRestApplicationTests {
 
         // Then
         Person verifyPerson = personRepository.findById(person.getId()).get();
-        assertEquals(verifyPerson.getName(), person.getName());
         assertEquals( "Mia", verifyPerson.getName());
         assertEquals( "Mia", person.getName());
         assertEquals(verifyPerson.getCity(), person.getCity());
@@ -105,10 +100,10 @@ class PersonsRestApplicationTests {
     void test_update_person_success() {
         // Given
         Person person1 = mock(Person.class);
-        when(personRepository.findById("111").thenReturn(Optional.of(person1)));
+        when(personRepository.findById(person1.getId())).thenReturn(Optional.of(person1));
 
         //When
-        PersonAPI.PersonDTO personUpdated = personApi.updatePerson(person1.getId(), "Sofia", null, 0);
+        PersonAPI.PersonDTO personUpdated = personApi.updatePerson(person1.getId(), "Sofia", "Stockholm", 8);
 
         // Then
         Person verifyPerson = personRepository.findById(person1.getId()).get();
@@ -128,26 +123,51 @@ class PersonsRestApplicationTests {
                 .block();
 
         // Then
-        Person verifyPerson = personRepository.findById(person1.getId()).get();
-        assertFalse(verifyPerson.isActive());
-       // assertEquals(List.of("BBB", "CCC"), verifyPerson.stream().map(Person::getName).collect(Collectors.toList()));
+        assertFalse(personRepository.findById(person1.getId()).isPresent());
     }
 
-
-    // lägg till en grupp
     @Test
-    void tets_add_group_to_person_success() {
+    void test_add_group_to_person_success() {
         // Given
-        PersonAPI.PersonDTO person1 = mock(PersonAPI.PersonDTO.class);
+        String groupId = UUID.randomUUID().toString();
+        String personId = UUID.randomUUID().toString();
+        Person person = mock(Person.class);
+        Person person2 = mock(Person.class);
+        when(person2.getGroups()).thenReturn(List.of(groupId));
+        when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
+        when(groupRemote.createGroup(eq("Ankeborgare"))).thenReturn(groupId);
+        when(personRepository.save(eq(person))).thenReturn(person2);
 
         // When
-        personApi.addGroup(person1, "Ankeborgare");
+        PersonAPI.PersonDTO personWithAddedGroup = personApi.addGroup(personId, "Ankeborgare");
 
+        // Then
+        assertEquals("Ankeborgare", personWithAddedGroup.getGroups().get(0));
+        verify(groupRemote, times(1)).createGroup(eq("Ankeborgare"));
+        verify(person, times(1)).addGroup(eq(groupId));
     }
 
+    @Test
+    void tets_remove_group_from_person_success() {
+        // Given
+        String groupId = UUID.randomUUID().toString();
+        String personId = UUID.randomUUID().toString();
+        Person person = mock(Person.class);
+        when(person.getGroups()).thenReturn(List.of(groupId));
+        Person person2 = mock(Person.class);
+        when(person2.getGroups()).thenReturn(List.of());
+        when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
+        when(personRepository.save(eq(person))).thenReturn(person2);
 
-    // ta bort en grupp
+        // When
+        PersonAPI.PersonDTO personWithRemovedGroup = personApi.removeGroup(personId, groupId);
 
+        // Then
+        assertEquals(groupId, personWithRemovedGroup.getGroups().get(0));
+        verify(groupRemote, times(0)).removeGroup(eq(groupId));
+        verify(person, times(1)).removeGroup(eq(groupId));
+        verify(personRepository, times(1)).save(eq(person));
+    }
 
     @Test
     void test_get_persons_filter_by_name_success() {

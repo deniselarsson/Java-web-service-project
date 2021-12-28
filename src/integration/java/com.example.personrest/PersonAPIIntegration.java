@@ -2,6 +2,7 @@ package com.example.personrest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -10,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@AllArgsConstructor
 public class PersonAPIIntegration {
 
     private static final String BASE_URL = "/api/persons/";

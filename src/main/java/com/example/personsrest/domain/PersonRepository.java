@@ -13,4 +13,6 @@ public interface PersonRepository {
     Page<Person> findAllByNameContainingOrCityContaining(String name, String city, Pageable pageable);
 
     void deleteAll();
+
+    Person save(Person person);
 }

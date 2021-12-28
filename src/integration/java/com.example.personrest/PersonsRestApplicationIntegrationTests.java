@@ -15,12 +15,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,66 +38,26 @@ public class PersonsRestApplicationIntegrationTests {
     @Autowired
     WebTestClient webTestClient;
 
-    @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
-    GroupRemote groupRemote;
-
     PersonAPIIntegration personAPIIntegration;
 
     @BeforeEach
-    void setUp() {
-
-
-    }
-
-    @AfterEach
-    void tearDown() {
-        personRepository.deleteAll();
+    public void setup() throws Exception {
+        personAPIIntegration = new PersonAPIIntegration(webTestClient);
     }
 
     @Test
-    void test_get_persons_success() {
+    void test_add_group_to_person() {
         // Given
         PersonAPIIntegration.PersonDTO person1 = personAPIIntegration.createPerson("Arne Anka", "Ankeborg", 100);
+
+        // When
         person1 = personAPIIntegration.addGroup(person1, "Ankeborgare");
 
-        // When
-        List<Person> persons = webTestClient.get().uri("/persons")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .returnResult(Person.class)
-                .getResponseBody()
-                .collectList()
-                .block();
-
         // Then
-        assertEquals(1, persons.size());
-        assertEquals("Arne Anka", persons.get(0).getName());
-        assertEquals("Ankeborgare", persons.get(0).getGroups().get(0));
+        assertEquals("Ankeborgare", person1.getGroups().get(0));
     }
 
 
-
-    @Test
-    void test_get_persons_filter_by_name_success() {
-        // Given
-        Person person1 = mock(Person.class);
-        Page<Person> page = new PageImpl<>(List.of(person1));
-        when(personRepository.findAllByNameContainingOrCityContaining(anyString(), anyString(), any(PageRequest.class))).thenReturn(page);
-
-        // When
-        webTestClient.get().uri("/persons")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .jsonPath("$.name").isNotEmpty()
-                .jsonPath("$.name").isEqualTo("test-webclient-repository");
-    }
+    // remove group
 
 }

@@ -5,5 +5,7 @@ public interface GroupRemote {
 
     String getNameById(String groupId);
 
-    void setNameById(String groupId, String name);
+    String createGroup(String name);
+
+    String removeGroup(String name);
 }
