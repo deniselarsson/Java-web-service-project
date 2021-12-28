@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -92,9 +93,12 @@ class PersonsRestApplicationTests {
         PersonAPI.PersonDTO person = personApi.createPerson("Mia", "Johannesburg", 70);
 
         // Then
-        Person verifyPerson = personRepository.findAll();
+        Person verifyPerson = personRepository.findById(person.getId()).get();
         assertEquals(verifyPerson.getName(), person.getName());
-        assertEquals(verifyPerson.getId(), person.getId());
+        assertEquals( "Mia", verifyPerson.getName());
+        assertEquals( "Mia", person.getName());
+        assertEquals(verifyPerson.getCity(), person.getCity());
+        assertEquals(verifyPerson.getAge(), person.getAge());
     }
 
     @Test
@@ -104,11 +108,11 @@ class PersonsRestApplicationTests {
         when(personRepository.findById("111").thenReturn(Optional.of(person1)));
 
         //When
-        PersonAPI.PersonDTO person = personApi.updatePerson(person1.getId(), "Sofia", null, 0);
+        PersonAPI.PersonDTO personUpdated = personApi.updatePerson(person1.getId(), "Sofia", null, 0);
 
         // Then
-        Optional<Person> verifyPerson = personRepository.findById(person1.getId());
-        assertEquals("Sofia", person.getName());
+        Person verifyPerson = personRepository.findById(person1.getId()).get();
+        assertEquals("Sofia", personUpdated.getName());
         assertEquals("Sofia", verifyPerson.getName());
 
     }
@@ -124,15 +128,25 @@ class PersonsRestApplicationTests {
                 .block();
 
         // Then
-        List<Person> verifyPerson = personRepository.findAll().collectList().block();
-        assertEquals(List.of("BBB", "CCC"), verifyPerson.stream().map(Person::getName).collect(Collectors.toList()));
+        Person verifyPerson = personRepository.findById(person1.getId()).get();
+        assertFalse(verifyPerson.isActive());
+       // assertEquals(List.of("BBB", "CCC"), verifyPerson.stream().map(Person::getName).collect(Collectors.toList()));
     }
 
 
-
     // lägg till en grupp
-    // ta bort en grupp
+    @Test
+    void tets_add_group_to_person_success() {
+        // Given
+        PersonAPI.PersonDTO person1 = mock(PersonAPI.PersonDTO.class);
 
+        // When
+        personApi.addGroup(person1, "Ankeborgare");
+
+    }
+
+
+    // ta bort en grupp
 
 
     @Test

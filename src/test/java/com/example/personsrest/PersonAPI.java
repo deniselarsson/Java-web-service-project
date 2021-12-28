@@ -75,7 +75,7 @@ public class PersonAPI {
                 .then();
     }
 
-    private PersonDTO addGroup(PersonDTO person1, String groupName) {
+    public PersonDTO addGroup(PersonDTO person1, String groupName) {
         return webTestClient.get().uri(BASE_URL + person1.getId() + "/addGroup?name=" + groupName)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()

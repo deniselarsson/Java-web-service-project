@@ -1,10 +1,8 @@
 package com.example.personrest;
 
-import com.example.personsrest.PersonAPI;
 import com.example.personsrest.domain.Person;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
-import lombok.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +38,7 @@ public class PersonsRestApplicationIntegrationTests {
     @Autowired
     GroupRemote groupRemote;
 
-    PersonAPIInegration personAPIInegration;
+    PersonAPIIntegration personAPIIntegration;
 
     @BeforeEach
     void setUp() {
@@ -56,8 +54,8 @@ public class PersonsRestApplicationIntegrationTests {
     @Test
     void test_get_persons_success() {
         // Given
-        PersonAPIInegration.PersonDTO person1 = personAPIInegration.createPerson("Arne Anka", "Ankeborg", 100);
-        person1 = personAPIInegration.addGroup(person1, "Ankeborgare");
+        PersonAPIIntegration.PersonDTO person1 = personAPIIntegration.createPerson("Arne Anka", "Ankeborg", 100);
+        person1 = personAPIIntegration.addGroup(person1, "Ankeborgare");
 
         // When
         List<Person> persons = webTestClient.get().uri("/persons")

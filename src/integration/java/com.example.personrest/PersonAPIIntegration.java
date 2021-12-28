@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-public class PersonAPIInegration {
+public class PersonAPIIntegration {
 
     private static final String BASE_URL = "/api/persons/";
 
