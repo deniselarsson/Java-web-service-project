@@ -1,7 +1,6 @@
 package com.example.personsrest;
 
 import com.example.personsrest.domain.Person;
-import com.example.personsrest.domain.PersonImpl;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -21,7 +22,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 
@@ -66,8 +68,6 @@ class PersonsRestApplicationTests {
         // Then
         assertEquals(1, persons.size());
         assertEquals("Arne Anka", persons.get(0).getName());
-        //    assertEquals("Ankeborgare", persons.get(0).getGroups().get(0));
-        //   verify(groupRemote, times(1)).getNameById(eq(groupId));
     }
 
     @Test
@@ -92,17 +92,16 @@ class PersonsRestApplicationTests {
         // Given
         Person person2 = mock(Person.class);
         String personId = UUID.randomUUID().toString();
-        when(personRepository.save(any(PersonImpl.class))).thenReturn(person2);
+        when(personRepository.save(any(Person.class))).thenReturn(person2);
         when(person2.getId()).thenReturn(personId);
         when(person2.getName()).thenReturn("Mia");
         when(person2.getCity()).thenReturn("Johannesburg");
 
         // When
-        PersonAPI.PersonDTO person = personApi.createPerson("Mia",  70, "Johannesburg")
-                .block();
+        PersonAPI.PersonDTO person = personApi.createPerson("Mia",  "Johannesburg", 70);
 
         // Then
-        verify(personRepository, times(1)).save(any(PersonImpl.class));
+        verify(personRepository, times(1)).save(any(Person.class));
         assertEquals("Mia", person.getName());
         assertEquals("Johannesburg", person.getCity());
     }
@@ -118,8 +117,7 @@ class PersonsRestApplicationTests {
         when(person2.getName()).thenReturn("Sofia");
 
         //When
-        PersonAPI.PersonDTO personUpdated = personApi.updatePerson(personId, "Sofia", "Stockholm", 8)
-                .block();
+        PersonAPI.PersonDTO personUpdated = personApi.updatePerson(personId, "Sofia", "Stockholm", 8);
 
         // Then
         assertEquals("Sofia", personUpdated.getName());
