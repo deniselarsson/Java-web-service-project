@@ -130,15 +130,16 @@ class PersonsRestApplicationTests {
     void test_delete_person_success() {
         // Given
         Person person1 = mock(Person.class);
+        String personId = UUID.randomUUID().toString();
         when(personRepository.findAll()).thenReturn(List.of(person1));
 
         // When
-        personApi.deletePerson(person1.getId())
+        personApi.deletePerson(personId)
                 .block();
 
         // Then
-        verify(personRepository, times(1)).delete(eq(person1.getId()));
-        assertFalse(personRepository.findById(person1.getId()).isPresent());
+        verify(personRepository, times(1)).delete(eq(personId));
+        assertFalse(personRepository.findById(personId).isPresent());
     }
 
     @Test
