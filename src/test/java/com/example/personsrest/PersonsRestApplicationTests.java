@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -179,7 +180,7 @@ class PersonsRestApplicationTests {
         PersonAPI.PersonDTO personWithRemovedGroup = personApi.removeGroup(personId, groupId);
 
         // Then
-        assertEquals(groupId, personWithRemovedGroup.getGroups().get(0));
+        assertTrue(groupId, personWithRemovedGroup.getGroups().isEmpty());
         verify(groupRemote, times(0)).removeGroup(eq(groupId));
         verify(person, times(1)).removeGroup(eq(groupId));
         verify(personRepository, times(1)).save(eq(person));

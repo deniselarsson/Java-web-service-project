@@ -89,7 +89,7 @@ public class PersonAPI {
     }
 
     public PersonDTO removeGroup(String personId, String groupId) {
-        return webTestClient.get().uri(BASE_URL + personId + "/removeGroup?id=" + groupId)
+        return webTestClient.delete().uri(BASE_URL + personId + "/removeGroup/" + groupId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
