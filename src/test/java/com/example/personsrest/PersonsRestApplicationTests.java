@@ -150,8 +150,9 @@ class PersonsRestApplicationTests {
         Person person2 = mock(Person.class);
         when(person2.getGroups()).thenReturn(List.of(groupId));
         when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
-        when(groupRemote.createGroup(eq("Ankeborgare"))).thenReturn(groupId);
         when(personRepository.save(eq(person))).thenReturn(person2);
+        when(groupRemote.createGroup(eq("Ankeborgare"))).thenReturn(groupId);
+        when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
 
         // When
         PersonAPI.PersonDTO personWithAddedGroup = personApi.addGroup(personId, "Ankeborgare");
