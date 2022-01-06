@@ -139,7 +139,6 @@ class PersonsRestApplicationTests {
 
         // Then
         verify(personRepository, times(1)).delete(eq(personId));
-        assertFalse(personRepository.findById(personId).isPresent());
     }
 
     @Test
