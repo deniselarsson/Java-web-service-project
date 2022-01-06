@@ -131,7 +131,7 @@ class PersonsRestApplicationTests {
         // Given
         Person person1 = mock(Person.class);
         String personId = UUID.randomUUID().toString();
-        when(personRepository.findAll()).thenReturn(List.of(person1));
+        when(personRepository.findById(personId)).thenReturn(Optional.of(person1));
 
         // When
         personApi.deletePerson(personId)
