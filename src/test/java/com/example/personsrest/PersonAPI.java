@@ -30,6 +30,16 @@ public class PersonAPI {
                 .getResponseBody();
     }
 
+    public Flux<PersonDTO> all(String search, int pagesize, int pagenumber) {
+        return webTestClient.get().uri("/api/persons?search="+search+"&pagenumber="+pagenumber+"&pagesize="+pagesize)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .returnResult(PersonDTO.class)
+                .getResponseBody();
+    }
+
     public Mono<PersonDTO> get(String id) {
         return webTestClient.get().uri(BASE_URL + id)
                 .accept(MediaType.APPLICATION_JSON)

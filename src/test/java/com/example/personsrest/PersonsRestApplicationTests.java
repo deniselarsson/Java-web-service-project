@@ -195,13 +195,7 @@ class PersonsRestApplicationTests {
                 any(PageRequest.class))).thenReturn(page);
 
         // When
-        List<Person> persons = webTestClient.get().uri("/persons?search=Arne&pagenumber=0&pagesize=10")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .returnResult(Person.class)
-                .getResponseBody()
+        List<PersonAPI.PersonDTO> persons = personApi.all("Arne", 10, 0)
                 .collectList()
                 .block();
 
