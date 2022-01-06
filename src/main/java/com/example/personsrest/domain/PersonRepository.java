@@ -15,4 +15,6 @@ public interface PersonRepository {
     void deleteAll();
 
     Person save(Person person);
+
+    void delete(String id);
 }
