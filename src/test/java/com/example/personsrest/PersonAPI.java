@@ -65,7 +65,7 @@ public class PersonAPI {
     }
 
     public PersonDTO updatePerson(String id, String name, String city, int age) {
-        return webTestClient.post().uri(BASE_URL + id)
+        return webTestClient.put().uri(BASE_URL + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UpdatePerson(name, city, age))
                 .accept(MediaType.APPLICATION_JSON)
