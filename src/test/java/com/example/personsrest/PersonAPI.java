@@ -98,8 +98,8 @@ public class PersonAPI {
                 .blockLast();
     }
 
-    public PersonDTO removeGroup(String personId, String groupId) {
-        return webTestClient.delete().uri(BASE_URL + personId + "/removeGroup/" + groupId)
+    public PersonDTO removeGroup(String personId, String groupName) {
+        return webTestClient.delete().uri(BASE_URL + personId + "/removeGroup/" + groupName)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()

@@ -175,9 +175,10 @@ class PersonsRestApplicationTests {
         when(person2.getGroups()).thenReturn(List.of());
         when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
         when(personRepository.save(eq(person))).thenReturn(person2);
+        when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
 
         // When
-        PersonAPI.PersonDTO personWithRemovedGroup = personApi.removeGroup(personId, groupId);
+        PersonAPI.PersonDTO personWithRemovedGroup = personApi.removeGroup(personId, "Ankeborgare");
 
         // Then
         assertTrue(groupId, personWithRemovedGroup.getGroups().isEmpty());
