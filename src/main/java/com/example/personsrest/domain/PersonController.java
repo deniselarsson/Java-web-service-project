@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PersonController {
     @GetMapping
     public PersonTest getPerson(){
-        return new PersonTest("1", "michelle", 22, "Malmö", "3");
+        return new PersonTest("michelle", 25, "malmö", "3");
     }
 }

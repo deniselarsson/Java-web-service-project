@@ -3,10 +3,12 @@ package com.example.personsrest.domain;
 import lombok.Value;
 
 import java.util.List;
+import java.util.UUID;
+
 @Value
 public class PersonTest implements Person {
 
-    String id;
+    String id = UUID.randomUUID().toString();
     String name;
     int age;
     String city;
@@ -15,12 +17,12 @@ public class PersonTest implements Person {
 
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class PersonTest implements Person {
 
     @Override
     public int getAge() {
-        return 0;
+        return age;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class PersonTest implements Person {
 
     @Override
     public String getCity() {
-        return null;
+        return city;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class PersonTest implements Person {
 
     @Override
     public boolean isActive() {
-        return false;
+        return true;
     }
 
     @Override
