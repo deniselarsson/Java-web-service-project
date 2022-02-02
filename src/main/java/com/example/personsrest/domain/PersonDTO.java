@@ -3,7 +3,7 @@ package com.example.personsrest.domain;
 import lombok.Value;
 
 @Value
-public class CreatePerson {
+public class PersonDTO {
         String name;
         String city;
         int age;
