@@ -1,3 +1,4 @@
+/*
 package com.example.personsrest.domain;
 
 import org.springframework.data.domain.Page;
@@ -9,8 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class PersonRepositoryImpl implements PersonRepository{
+public class PersonRepositoryImpl implements PersonRepository {
     List<PersonImpl> person = new ArrayList<>();
+
     @Override
     public Optional<Person> findById(String id) {
         return Optional.empty();
@@ -18,7 +20,7 @@ public class PersonRepositoryImpl implements PersonRepository{
 
     @Override
     public List<PersonImpl> findAll() {
-        return person;
+        return null;
     }
 
     @Override
@@ -41,3 +43,4 @@ public class PersonRepositoryImpl implements PersonRepository{
 
     }
 }
+*/
