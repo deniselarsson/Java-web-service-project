@@ -13,15 +13,14 @@ public class PersonEntity implements Person {
     String name;
     String city;
     int age;
-    //List<String> groupId;
 
-    public PersonEntity(String name, int age, String city) {
-        this.id = UUID.randomUUID().toString();
+    public PersonEntity(String id, String name, int age, String city) {
+        this.id = id;
         this.name = name;
         this.age = age;
         this.city = city;
-        //this.groupId = groupId;
     }
+
 
     @Override
     public boolean isActive() {

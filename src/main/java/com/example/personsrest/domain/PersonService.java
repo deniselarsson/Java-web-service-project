@@ -11,4 +11,12 @@ public class PersonService {
         return Stream.of(
                 new PersonEntity(UUID.randomUUID().toString(), "Arne Anka", "Ankeborg", 100));
     }
+    public PersonEntity createPerson(String name, int age, String city) {
+        return new PersonEntity(
+                UUID.randomUUID().toString(),
+                name,
+                age,
+                city
+        );
+    }
 }

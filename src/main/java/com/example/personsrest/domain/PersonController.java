@@ -1,9 +1,7 @@
 package com.example.personsrest.domain;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +10,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/persons/")
 @AllArgsConstructor
 public class PersonController {
+
     PersonService personService;
 
     @GetMapping
@@ -20,6 +19,15 @@ public class PersonController {
                 .map(PersonController::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @PostMapping
+    public PersonDTO createPerson(@RequestBody CreatePerson createPerson) {
+        return toDTO(personService.createPerson(
+                createPerson.getName(),
+                createPerson.getAge(),
+                createPerson.getCity()));
+    }
+
     private static PersonDTO toDTO(PersonEntity personEntity) {
         return new PersonDTO(
                 personEntity.getId(),
