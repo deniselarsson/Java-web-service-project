@@ -1,25 +1,26 @@
 package com.example.personsrest.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
 @Data
-public class PersonImpl implements Person {
+@AllArgsConstructor
+public class PersonEntity implements Person {
     String id;
     String name;
-    int age;
     String city;
-    List<String> groupId;
+    int age;
+    //List<String> groupId;
 
-    public PersonImpl(String name, int age, String city, List<String> groupId) {
+    public PersonEntity(String name, int age, String city) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.age = age;
         this.city = city;
-        this.groupId = groupId;
+        //this.groupId = groupId;
     }
 
     @Override
