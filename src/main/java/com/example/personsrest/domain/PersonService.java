@@ -27,4 +27,12 @@ public class PersonService {
                 "Ankeborg"
         );
     }
+    public PersonEntity updatePerson(String id,String name, int age, String city) {
+        return new PersonEntity(
+                id,
+                name,
+                age,
+                city
+        );
+    }
 }

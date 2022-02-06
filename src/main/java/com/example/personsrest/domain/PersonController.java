@@ -40,4 +40,13 @@ public class PersonController {
                 personEntity.getAge()
         );
     }
+    @PutMapping("/{id}")
+    public PersonDTO update(@PathVariable("id") String id, @RequestBody UpdatePerson updatePerson) {
+        return toDTO(
+                personService.updatePerson(
+                        id,
+                        updatePerson.getName(),
+                        updatePerson.getAge(),
+                        updatePerson.getCity()));
+    }
 }
