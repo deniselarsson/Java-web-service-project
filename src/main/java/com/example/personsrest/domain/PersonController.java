@@ -13,6 +13,17 @@ public class PersonController {
 
     PersonService personService;
 
+    //TODO:
+    //Anrop - hämta personer
+    //Parameter - search
+    //Filtrerar sökresultat med sökning på Förnamn och efternamn.Kan vara tom (null).
+    //Parameter - PageNumber
+    //Sidnummer för begränsning av sökresultat vidsökningar.Kan vara tom (null).
+    //Parameter - PageSize
+    //Max träffar per sida för begränsning av sökresultat vidsökningar.Kan vara tom (null).
+    //Retur - Lista medPersoner
+
+
     @GetMapping
     public List<PersonDTO> findAll() {
         return personService.findAll()
@@ -27,19 +38,12 @@ public class PersonController {
                 createPerson.getAge(),
                 createPerson.getCity()));
     }
+
     @GetMapping("/{id}")
     public PersonDTO get(@PathVariable("id") String id) {
         return toDTO(personService.get(id));
     }
 
-    private static PersonDTO toDTO(PersonEntity personEntity) {
-        return new PersonDTO(
-                personEntity.getId(),
-                personEntity.getName(),
-                personEntity.getCity(),
-                personEntity.getAge()
-        );
-    }
     @PutMapping("/{id}")
     public PersonDTO update(@PathVariable("id") String id, @RequestBody UpdatePerson updatePerson) {
         return toDTO(
@@ -54,4 +58,26 @@ public class PersonController {
     public void delete(@PathVariable("id") String id) {
         personService.delete(id);
     }
+
+    private static PersonDTO toDTO(PersonEntity personEntity) {
+        return new PersonDTO(
+                personEntity.getId(),
+                personEntity.getName(),
+                personEntity.getCity(),
+                personEntity.getAge()
+        );
+    }
+    //TODO:
+    //Anrop: Lägg till en grupp på en person
+    //URI - /persons/[id]/addGroup
+    //Metod - GET
+    //Parameter - Namn, Namn på Gruppen som skall associeras med personen.
+    //Retur - Person med det ID
+
+    //TODO:
+    //Anrop: /persons/[id]/removeGroup
+    //URI - /persons/[id]/addGroup
+    //Metod - GET
+    //Parameter - Name, Namn på Gruppen som skall tas bort från personen.
+    //Retur - Person med det ID
 }
