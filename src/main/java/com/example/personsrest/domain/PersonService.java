@@ -35,4 +35,6 @@ public class PersonService {
                 city
         );
     }
+    public void delete(String id) {
+    }
 }

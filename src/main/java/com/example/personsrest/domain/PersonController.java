@@ -49,4 +49,9 @@ public class PersonController {
                         updatePerson.getAge(),
                         updatePerson.getCity()));
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") String id) {
+        personService.delete(id);
+    }
 }
