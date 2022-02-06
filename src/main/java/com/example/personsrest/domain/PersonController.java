@@ -27,6 +27,10 @@ public class PersonController {
                 createPerson.getAge(),
                 createPerson.getCity()));
     }
+    @GetMapping("/{id}")
+    public PersonDTO get(@PathVariable("id") String id) {
+        return toDTO(personService.get(id));
+    }
 
     private static PersonDTO toDTO(PersonEntity personEntity) {
         return new PersonDTO(

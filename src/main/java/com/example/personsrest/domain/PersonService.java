@@ -19,4 +19,12 @@ public class PersonService {
                 city
         );
     }
+    public PersonEntity get(String id) {
+        return new PersonEntity(
+                id,
+                "Arne Anka",
+                100,
+                "Ankeborg"
+        );
+    }
 }
