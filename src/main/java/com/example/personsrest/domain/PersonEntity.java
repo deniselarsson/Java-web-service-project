@@ -2,9 +2,7 @@ package com.example.personsrest.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor

@@ -1,10 +1,8 @@
 package com.example.personsrest.domain;
 
 import com.example.personsrest.remote.GroupRemote;
-import com.example.personsrest.remote.GroupRemoteImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,17 +13,6 @@ public class PersonController {
 
     PersonService personService;
     GroupRemote groupRemote;
-
-    //TODO:
-    //Anrop - hämta personer
-    //Parameter - search
-    //Filtrerar sökresultat med sökning på Förnamn och efternamn.Kan vara tom (null).
-    //Parameter - PageNumber
-    //Sidnummer för begränsning av sökresultat vidsökningar.Kan vara tom (null).
-    //Parameter - PageSize
-    //Max träffar per sida för begränsning av sökresultat vidsökningar.Kan vara tom (null).
-    //Retur - Lista medPersoner
-
 
     @GetMapping
     public List<PersonDTO> findAll() {
@@ -39,7 +26,6 @@ public class PersonController {
         return toDTO(
                 personService.createPerson(createPerson.getName(), createPerson.getAge(), createPerson.getCity()));
     }
-
 
     @GetMapping("/{id}")
     public PersonDTO get(@PathVariable("id") String id) {
@@ -56,13 +42,6 @@ public class PersonController {
 
         personService.delete(id);
     }
-
-    //TODO:
-    //Anrop: Lägg till en grupp på en person
-    //URI - /persons/[id]/addGroup
-    //Metod - GET
-    //Parameter - Namn, Namn på Gruppen som skall associeras med personen.
-    //Retur - Person med det ID
 
     @PutMapping("/{id}/addGroup/{name}")
     public PersonDTO addPersonToGroup(@PathVariable("id") String id, @PathVariable("name")String name){
