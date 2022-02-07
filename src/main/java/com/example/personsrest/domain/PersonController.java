@@ -32,12 +32,11 @@ public class PersonController {
     }
 
     @PostMapping
-    public PersonDTO createPerson(@RequestBody CreatePerson createPerson) {
-        return toDTO(personService.createPerson(
-                createPerson.getName(),
-                createPerson.getAge(),
-                createPerson.getCity()));
+    public PersonDTO create(@RequestBody CreatePerson createPerson) {
+        return toDTO(
+                personService.createPerson(createPerson.getName(), createPerson.getAge(), createPerson.getCity()));
     }
+
 
     @GetMapping("/{id}")
     public PersonDTO get(@PathVariable("id") String id) {
@@ -59,12 +58,12 @@ public class PersonController {
         personService.delete(id);
     }
 
-    private static PersonDTO toDTO(PersonEntity personEntity) {
+    private static PersonDTO toDTO(Person person) {
         return new PersonDTO(
-                personEntity.getId(),
-                personEntity.getName(),
-                personEntity.getCity(),
-                personEntity.getAge()
+                person.getId(),
+                person.getName(),
+                person.getCity(),
+                person.getAge()
         );
     }
     //TODO:
