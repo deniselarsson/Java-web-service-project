@@ -37,5 +37,6 @@ public class PersonService {
     }
 
     public void delete(String id) {
+        personRepository.delete(id);
     }
 }
