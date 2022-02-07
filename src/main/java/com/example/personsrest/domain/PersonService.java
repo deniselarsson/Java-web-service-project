@@ -28,14 +28,14 @@ public class PersonService {
         return personRepository.findById(id).orElse(null);
     }
 
-    public PersonEntity updatePerson(String id,String name, int age, String city) {
-        return new PersonEntity(
-                id,
-                name,
-                age,
-                city
-        );
+    public Person updatePerson(String id,String name, int age, String city) {
+        Person oldPerson = personRepository.findById(id).orElse(null);
+        oldPerson.setName(name);
+        oldPerson.setAge(age);
+        oldPerson.setCity(city);
+        return personRepository.save(oldPerson);
     }
+
     public void delete(String id) {
     }
 }

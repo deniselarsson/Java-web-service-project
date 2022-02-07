@@ -45,12 +45,7 @@ public class PersonController {
 
     @PutMapping("/{id}")
     public PersonDTO update(@PathVariable("id") String id, @RequestBody UpdatePerson updatePerson) {
-        return toDTO(
-                personService.updatePerson(
-                        id,
-                        updatePerson.getName(),
-                        updatePerson.getAge(),
-                        updatePerson.getCity()));
+        return toDTO(personService.updatePerson(id, updatePerson.getName(), updatePerson.getAge(), updatePerson.getCity()));
     }
 
     @DeleteMapping("/{id}")
