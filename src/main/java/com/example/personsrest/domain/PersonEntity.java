@@ -13,12 +13,14 @@ public class PersonEntity implements Person {
     String name;
     String city;
     int age;
+    List<String> groups;
 
-    public PersonEntity(String id, String name, int age, String city) {
+    public PersonEntity(String id, String name, int age, String city, List<String> groups) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.city = city;
+        this.groups = groups;
     }
 
 
@@ -34,16 +36,16 @@ public class PersonEntity implements Person {
 
     @Override
     public List<String> getGroups() {
-        return null;
+        return this.groups;
     }
 
     @Override
     public void addGroup(String groupId) {
-
+        this.groups.add(groupId);
     }
 
     @Override
     public void removeGroup(String groupId) {
-
+        this.groups.remove(groupId);
     }
 }

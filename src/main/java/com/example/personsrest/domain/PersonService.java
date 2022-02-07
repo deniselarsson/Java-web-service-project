@@ -3,6 +3,7 @@ package com.example.personsrest.domain;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -13,14 +14,15 @@ public class PersonService {
 
     public Stream<PersonEntity> findAll() {
         return Stream.of(
-                new PersonEntity(UUID.randomUUID().toString(), "Arne Anka", "Ankeborg", 100));
+                new PersonEntity(UUID.randomUUID().toString(), "Arne Anka", "Ankeborg", 100, List.of()));
     }
     public Person createPerson(String name, int age, String city) {
         Person person = new PersonEntity(
                 UUID.randomUUID().toString(),
                 name,
                 age,
-                city
+                city,
+                List.of()
         );
         return personRepository.save(person);
     }
@@ -36,7 +38,13 @@ public class PersonService {
         return personRepository.save(oldPerson);
     }
 
+    public Person save(Person person) {
+        return personRepository.save(person);
+    }
+
     public void delete(String id) {
         personRepository.delete(id);
     }
+
+
 }
