@@ -3,12 +3,17 @@ package com.example.personsrest.domain;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class PersonRepositoryImpl implements PersonRepository {
+    Map<String,Person> persons = new HashMap<>();
+
     @Override
     public Optional<Person> findById(String id) {
+
         return Optional.empty();
     }
 
@@ -29,6 +34,7 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Person save(Person person) {
+        persons.put(person.getId(), person);
         return null;
     }
 
