@@ -39,27 +39,26 @@ public class PersonController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") String id) {
-
         personService.delete(id);
     }
 
     @PutMapping("/{id}/addGroup/{name}")
     public PersonDTO addPersonToGroup(@PathVariable("id") String id, @PathVariable("name")String name){
-        var person = this.personService.get(id);
+        var person = personService.get(id);
         var groupId = groupRemote.createGroup(name);
         person.addGroup(groupId);
-        return toDTO(this.personService.save(person));
+        return toDTO(personService.save(person));
     }
 
-    //TODO:
-    //Anrop: /persons/[id]/removeGroup
-    //URI - /persons/[id]/addGroup
-    //Metod - GET
-    //Parameter - Name, Namn på Gruppen som skall tas bort från personen.
-    //Retur - Person med det ID
-    @GetMapping("/{id}/removeGroup")
-    public void removeGroupFromPerson(@PathVariable("id") String id, String name){
-
+    @DeleteMapping("/{id}/removeGroup/{name}")
+    public PersonDTO removeGroup(@PathVariable("id") String id, @PathVariable("name")String name){
+        var person = personService.get(id);
+        for(var groupId : person.getGroups()) {
+            if (groupRemote.getNameById(groupId).equals(name)) {
+                person.removeGroup(groupId);
+            }
+        }
+        return toDTO(personService.save(person));
     }
 
     private PersonDTO toDTO(Person person) {
