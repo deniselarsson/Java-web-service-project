@@ -3,6 +3,7 @@ package com.example.personsrest.domain;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -22,7 +23,7 @@ public class PersonService {
                 name,
                 age,
                 city,
-                List.of()
+                new ArrayList<>()
         );
         return personRepository.save(person);
     }

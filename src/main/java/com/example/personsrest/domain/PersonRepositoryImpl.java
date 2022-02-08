@@ -14,7 +14,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public Optional<Person> findById(String id) {
 
-        return Optional.empty();
+        return Optional.of(persons.get(id));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public Person save(Person person) {
         persons.put(person.getId(), person);
-        return null;
+        return person;
     }
 
     @Override

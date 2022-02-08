@@ -1,6 +1,7 @@
 package com.example.personsrest.domain;
 
 import com.example.personsrest.remote.GroupRemote;
+import com.example.personsrest.remote.GroupRemoteImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -47,7 +48,8 @@ public class PersonController {
         var person = personService.get(id);
         var groupId = groupRemote.createGroup(name);
         person.addGroup(groupId);
-        return toDTO(personService.save(person));
+        return toDTO(
+                personService.save(person));
     }
 
     @DeleteMapping("/{id}/removeGroup/{name}")
