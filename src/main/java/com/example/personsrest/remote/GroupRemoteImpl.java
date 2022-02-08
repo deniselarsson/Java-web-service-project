@@ -1,8 +1,6 @@
 package com.example.personsrest.remote;
 
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,6 +25,9 @@ public class GroupRemoteImpl implements GroupRemote{
 
     @Override
     public String removeGroup(String name) {
-        return name;
+        var id = nameToId.get(name);
+        nameToId.remove(name);
+        idToName.remove(id);
+        return id;
     }
 }

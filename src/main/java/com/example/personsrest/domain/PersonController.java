@@ -55,8 +55,10 @@ public class PersonController {
     @DeleteMapping("/{id}/removeGroup/{name}")
     public PersonDTO removeGroup(@PathVariable("id") String id, @PathVariable("name")String name){
         var person = personService.get(id);
-        for(var groupId : person.getGroups()) {
+        var groups = person.getGroups().toArray(new String[0]);
+        for(var groupId : groups) {
             if (groupRemote.getNameById(groupId).equals(name)) {
+                groupRemote.removeGroup(name);
                 person.removeGroup(groupId);
             }
         }
