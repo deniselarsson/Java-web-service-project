@@ -1,6 +1,8 @@
 package com.example.personsrest.domain;
 
+import com.example.personsrest.remote.GroupRemote;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,23 +14,27 @@ import java.util.stream.Collectors;
 public class PersonController {
 
     PersonService personService;
-
-    //TODO:
-    //Anrop - hämta personer
-    //Parameter - search
-    //Filtrerar sökresultat med sökning på Förnamn och efternamn.Kan vara tom (null).
-    //Parameter - PageNumber
-    //Sidnummer för begränsning av sökresultat vidsökningar.Kan vara tom (null).
-    //Parameter - PageSize
-    //Max träffar per sida för begränsning av sökresultat vidsökningar.Kan vara tom (null).
-    //Retur - Lista medPersoner
-
+    GroupRemote groupRemote;
 
     @GetMapping
     public List<PersonDTO> findAll() {
         return personService.findAll()
-                .map(PersonController::toDTO)
+                .map(person -> this.toDTO(person))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/?search={name}&pagenumber=0&pagesize=10")
+    public List<Person> findContains(@RequestParam("search") String search, @RequestParam("pagenumber") String pagenumber,
+                                     @RequestParam("pagesize") String pagesize) {
+        /*return personService.find(search, pagenumber, pagesize)
+                .map(person -> this.toDTO(person))
+                .collect(Collectors.toList());*/
+        return null;
+    }
+
+    @GetMapping("/findAllList")
+    public List<Person> findAllList() {
+        return personService.findAllList();
     }
 
     @PostMapping
@@ -36,7 +42,6 @@ public class PersonController {
         return toDTO(
                 personService.createPerson(createPerson.getName(), createPerson.getAge(), createPerson.getCity()));
     }
-
 
     @GetMapping("/{id}")
     public PersonDTO get(@PathVariable("id") String id) {
@@ -53,25 +58,35 @@ public class PersonController {
         personService.delete(id);
     }
 
-    private static PersonDTO toDTO(Person person) {
+    @PutMapping("/{id}/addGroup/{name}")
+    public PersonDTO addPersonToGroup(@PathVariable("id") String id, @PathVariable("name") String name) {
+        var person = personService.get(id);
+        var groupId = groupRemote.createGroup(name);
+        person.addGroup(groupId);
+        return toDTO(
+                personService.save(person));
+    }
+
+    @DeleteMapping("/{id}/removeGroup/{name}")
+    public PersonDTO removeGroup(@PathVariable("id") String id, @PathVariable("name") String name) {
+        var person = personService.get(id);
+        var groups = person.getGroups().toArray(new String[0]);
+        for (var groupId : groups) {
+            if (groupRemote.getNameById(groupId).equals(name)) {
+                groupRemote.removeGroup(name);
+                person.removeGroup(groupId);
+            }
+        }
+        return toDTO(personService.save(person));
+    }
+
+    private PersonDTO toDTO(Person person) {
         return new PersonDTO(
                 person.getId(),
                 person.getName(),
                 person.getCity(),
-                person.getAge()
+                person.getAge(),
+                person.getGroups().stream().map(id -> groupRemote.getNameById(id)).collect(Collectors.toList())
         );
     }
-    //TODO:
-    //Anrop: Lägg till en grupp på en person
-    //URI - /persons/[id]/addGroup
-    //Metod - GET
-    //Parameter - Namn, Namn på Gruppen som skall associeras med personen.
-    //Retur - Person med det ID
-
-    //TODO:
-    //Anrop: /persons/[id]/removeGroup
-    //URI - /persons/[id]/addGroup
-    //Metod - GET
-    //Parameter - Name, Namn på Gruppen som skall tas bort från personen.
-    //Retur - Person med det ID
 }

@@ -1,7 +1,5 @@
 package com.example.personsrest.domain;
 
-import lombok.Value;
-
 import java.util.List;
 
 public interface Person {

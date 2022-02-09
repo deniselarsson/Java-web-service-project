@@ -3,28 +3,35 @@ package com.example.personsrest.domain;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class PersonRepositoryImpl implements PersonRepository {
-    Map<String,Person> persons = new HashMap<>();
+    Map<String, Person> persons = new HashMap<>();
+    List<Person> personsList = new ArrayList<>();
 
     @Override
     public Optional<Person> findById(String id) {
 
-        return Optional.empty();
+        return Optional.of(persons.get(id));
     }
 
     @Override
     public List<Person> findAll() {
-        return null;
+        //DO stuff
+        persons.forEach((k, v) -> {
+            personsList.add(v);
+        });
+
+        return personsList;
     }
 
     @Override
     public Page<Person> findAllByNameContainingOrCityContaining(String name, String city, Pageable pageable) {
-        return null;
+        Page page = (Page) personsList.stream()
+                .filter(person -> name.equals(person.getName()))
+                .findAny()
+                .orElse(null);
+        return page;
     }
 
     @Override
@@ -35,7 +42,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public Person save(Person person) {
         persons.put(person.getId(), person);
-        return null;
+        return person;
     }
 
     @Override
