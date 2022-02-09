@@ -2,6 +2,7 @@ package com.example.personsrest.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import java.util.List;
 
 @Data
@@ -39,7 +40,7 @@ public class PersonEntity implements Person {
 
     @Override
     public void addGroup(String groupId) {
-         this.groups.add(groupId);
+        this.groups.add(groupId);
     }
 
     @Override

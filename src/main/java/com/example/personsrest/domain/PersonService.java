@@ -17,6 +17,7 @@ public class PersonService {
         return Stream.of(
                 new PersonEntity(UUID.randomUUID().toString(), "Arne Anka", "Ankeborg", 100, List.of()));
     }
+
     public Person createPerson(String name, int age, String city) {
         Person person = new PersonEntity(
                 UUID.randomUUID().toString(),
@@ -27,11 +28,12 @@ public class PersonService {
         );
         return personRepository.save(person);
     }
+
     public Person get(String id) {
         return personRepository.findById(id).orElse(null);
     }
 
-    public Person updatePerson(String id,String name, int age, String city) {
+    public Person updatePerson(String id, String name, int age, String city) {
         Person oldPerson = personRepository.findById(id).orElse(null);
         oldPerson.setName(name);
         oldPerson.setAge(age);

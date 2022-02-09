@@ -1,9 +1,9 @@
 package com.example.personsrest.domain;
 
 import com.example.personsrest.remote.GroupRemote;
-import com.example.personsrest.remote.GroupRemoteImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +44,7 @@ public class PersonController {
     }
 
     @PutMapping("/{id}/addGroup/{name}")
-    public PersonDTO addPersonToGroup(@PathVariable("id") String id, @PathVariable("name")String name){
+    public PersonDTO addPersonToGroup(@PathVariable("id") String id, @PathVariable("name") String name) {
         var person = personService.get(id);
         var groupId = groupRemote.createGroup(name);
         person.addGroup(groupId);
@@ -53,10 +53,10 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}/removeGroup/{name}")
-    public PersonDTO removeGroup(@PathVariable("id") String id, @PathVariable("name")String name){
+    public PersonDTO removeGroup(@PathVariable("id") String id, @PathVariable("name") String name) {
         var person = personService.get(id);
         var groups = person.getGroups().toArray(new String[0]);
-        for(var groupId : groups) {
+        for (var groupId : groups) {
             if (groupRemote.getNameById(groupId).equals(name)) {
                 groupRemote.removeGroup(name);
                 person.removeGroup(groupId);

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class PersonRepositoryImpl implements PersonRepository {
-    Map<String,Person> persons = new HashMap<>();
+    Map<String, Person> persons = new HashMap<>();
 
     @Override
     public Optional<Person> findById(String id) {
