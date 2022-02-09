@@ -2,6 +2,7 @@ package com.example.personsrest.domain;
 
 import com.example.personsrest.remote.GroupRemote;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,20 @@ public class PersonController {
         return personService.findAll()
                 .map(person -> this.toDTO(person))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/?search={name}&pagenumber=0&pagesize=10")
+    public List<Person> findContains(@RequestParam("search") String search, @RequestParam("pagenumber") String pagenumber,
+                                     @RequestParam("pagesize") String pagesize) {
+        /*return personService.find(search, pagenumber, pagesize)
+                .map(person -> this.toDTO(person))
+                .collect(Collectors.toList());*/
+        return null;
+    }
+
+    @GetMapping("/findAllList")
+    public List<Person> findAllList() {
+        return personService.findAllList();
     }
 
     @PostMapping
