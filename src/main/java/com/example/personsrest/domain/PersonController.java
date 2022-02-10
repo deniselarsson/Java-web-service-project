@@ -87,7 +87,7 @@ public class PersonController {
     }
 
     @GetMapping("/test")
-    public List<Person> getAllPerson(
+    public Page<Person> getAllPerson(
             @RequestParam(defaultValue = "Arne") String name,
             @RequestParam(defaultValue = "Ankeborg") String city,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {

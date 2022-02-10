@@ -61,16 +61,10 @@ public class PersonService {
         return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
     }
 
-    public List<Person> findPage(String name, String city, Pageable pageable) {
-        //return personRepository.findAllByNameContainingOrCityContaining(search, pagenumber, Pageable.unpaged());
+    public Page<Person> findPage(String name, String city, Pageable pageable) {
+        return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
         //return new PageImpl();
         //Pageable paging = PageRequest.of(name, city, pageable);
-        Page<Person> pagedResult = personRepository.findAllByNameContainingOrCityContaining(name, city, pageable);
 
-        if (pagedResult.hasContent()) {
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<Person>();
-        }
     }
 }
