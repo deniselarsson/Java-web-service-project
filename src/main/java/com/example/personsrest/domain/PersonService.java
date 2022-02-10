@@ -2,13 +2,14 @@ package com.example.personsrest.domain;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 @Service
@@ -60,8 +61,16 @@ public class PersonService {
         return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
     }
 
-    public Stream<Person> find(String search, String pagenumber, String pagesize) {
+    public List<Person> findPage(String name, String city, Pageable pageable) {
         //return personRepository.findAllByNameContainingOrCityContaining(search, pagenumber, Pageable.unpaged());
-        return null;
+        //return new PageImpl();
+        //Pageable paging = PageRequest.of(name, city, pageable);
+        Page<Person> pagedResult = personRepository.findAllByNameContainingOrCityContaining(name, city, pageable);
+
+        if (pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<Person>();
+        }
     }
 }

@@ -3,6 +3,11 @@ package com.example.personsrest.domain;
 import com.example.personsrest.remote.GroupRemote;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +20,7 @@ public class PersonController {
 
     PersonService personService;
     GroupRemote groupRemote;
+    Page page;
 
     @GetMapping
     public List<PersonDTO> findAll() {
@@ -78,6 +84,16 @@ public class PersonController {
             }
         }
         return toDTO(personService.save(person));
+    }
+
+    @GetMapping("/test")
+    public List<Person> getAllPerson(
+            @RequestParam(defaultValue = "Arne") String name,
+            @RequestParam(defaultValue = "Ankeborg") String city,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        //List<Person> list = personService.findPage(name, city, pageable);
+        //return personService.findAllList();
+        return personService.findPage(name, city, pageable);
     }
 
     private PersonDTO toDTO(Person person) {
