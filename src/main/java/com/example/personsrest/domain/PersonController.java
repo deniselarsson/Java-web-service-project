@@ -86,11 +86,12 @@ public class PersonController {
         return toDTO(personService.save(person));
     }
 
-    @GetMapping("/test")
+    @GetMapping("/test/{namevar}")
     public Page<Person> getAllPerson(
+            @PathVariable("namevar") String namevar,
             @RequestParam(defaultValue = "Arne") String name,
             @RequestParam(defaultValue = "Ankeborg") String city,
-            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+            @PageableDefault(page = 1, size = 10) Pageable pageable) {
         //List<Person> list = personService.findPage(name, city, pageable);
         //return personService.findAllList();
         return personService.findPage(name, city, pageable);
