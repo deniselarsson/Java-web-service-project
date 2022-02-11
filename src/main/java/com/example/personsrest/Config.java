@@ -1,6 +1,5 @@
 package com.example.personsrest;
 
-import com.example.personsrest.domain.PageImpl;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.domain.PersonRepositoryImpl;
 import com.example.personsrest.remote.GroupRemote;
@@ -21,7 +20,4 @@ public class Config {
         return new PersonRepositoryImpl();
     }
 
-    @Bean
-    public Page page(){ return new PageImpl();
-    }
 }

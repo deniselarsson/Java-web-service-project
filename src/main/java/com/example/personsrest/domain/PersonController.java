@@ -14,29 +14,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/persons/")
+@RequestMapping("/api/persons")
 @AllArgsConstructor
 public class PersonController {
 
     PersonService personService;
     GroupRemote groupRemote;
-    Page page;
 
     @GetMapping
-    public List<PersonDTO> findAll() {
-        return personService.findAll()
+    public List<PersonDTO> findAll(@RequestParam(value = "search", required = false) String search, @RequestParam(value = "pagenumber", required = false) Integer pagenumber,
+                                   @RequestParam(value = "pagesize", required = false) Integer pagesize) {
+        return personService.findAll(search, pagenumber, pagesize)
                 .map(person -> this.toDTO(person))
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/?search={name}&pagenumber=0&pagesize=10")
+    /*@GetMapping("/?search={name}&pagenumber=0&pagesize=10")
     public List<Person> findContains(@RequestParam("search") String search, @RequestParam("pagenumber") String pagenumber,
                                      @RequestParam("pagesize") String pagesize) {
-        /*return personService.find(search, pagenumber, pagesize)
+        *//*return personService.find(search, pagenumber, pagesize)
                 .map(person -> this.toDTO(person))
-                .collect(Collectors.toList());*/
+                .collect(Collectors.toList());*//*
         return null;
-    }
+    }*/
 
     @GetMapping("/findAllList")
     public List<Person> findAllList() {

@@ -17,9 +17,12 @@ import java.util.stream.Stream;
 public class PersonService {
     PersonRepository personRepository;
 
-    public Stream<PersonEntity> findAll() {
-        return Stream.of(
-                new PersonEntity(UUID.randomUUID().toString(), "Arne Anka", "Ankeborg", 100, List.of()));
+    public Stream<Person> findAll(String search, Integer pagenumber, Integer pagesize) {
+        if(search == null || search.isEmpty()){
+            return personRepository.findAll().stream();
+        }
+        Pageable paging = PageRequest.of(pagenumber, pagesize);
+       return personRepository.findAllByNameContainingOrCityContaining(search, search, paging).stream();
     }
 
     public Person createPerson(String name, int age, String city) {
@@ -61,10 +64,13 @@ public class PersonService {
         return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
     }
 
+/*    public Page<Person> findPersonWithPagination(int offset, int pageSize){
+        Page<Person> personas = personRepository.findAll(PageRequest.of(offset, pageSize))
+    }*/
+
     public Page<Person> findPage(String name, String city, Pageable pageable) {
         return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
         //return new PageImpl();
         //Pageable paging = PageRequest.of(name, city, pageable);
-
     }
 }
