@@ -31,10 +31,10 @@ public class PersonsRestApplicationIntegrationTests {
         PersonAPI.PersonDTO person1 = personAPI.createPerson("Arne Anka", "Ankeborg", 100);
 
         // When
-        person1 = personAPI.addGroup(person1.getId(), "AnkeborgareJohnSnow");
+        person1 = personAPI.addGroup(person1.getId(), "Ankeborgare");
 
         // Then
-        assertEquals("AnkeborgareJohnSnow", person1.getGroups().get(0));
+        assertEquals("Ankeborgare", person1.getGroups().get(0));
     }
 
 
@@ -42,7 +42,7 @@ public class PersonsRestApplicationIntegrationTests {
     void test_remove_group_from_person() {
         // Given
         PersonAPI.PersonDTO person1 = personAPI.createPerson("Arne Anka", "Ankeborg", 100);
-        person1 = personAPI.addGroup(person1.getId(), "AnkeborgareJohnSnow");
+        person1 = personAPI.addGroup(person1.getId(), "Ankeborgare");
 
         // When
         person1 = personAPI.removeGroup(person1.getId(), person1.getGroups().get(0));
