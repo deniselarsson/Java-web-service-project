@@ -18,7 +18,6 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public List<Person> findAll() {
-        //DO stuff
         persons.forEach((k, v) -> {
             personsList.add(v);
         });
@@ -37,25 +36,10 @@ public class PersonRepositoryImpl implements PersonRepository {
             return pageList;
         }
         return null;
-
-        /*Page page = (Page) personsList.stream()
-                .filter(person -> name.equals(person.getName()))
-                .findAny()
-                .orElse(null);
-        return page;*/
-
-        //Page<Person> pagedResult = personRepository.findAllByNameContainingOrCityContaining(name, city, pageable);
-
-        /*if (persons.containsValue(name)) {
-            return (Page) persons.values();
-        } else {
-            return null;
-        }*/
     }
 
     @Override
     public void deleteAll() {
-
     }
 
     @Override

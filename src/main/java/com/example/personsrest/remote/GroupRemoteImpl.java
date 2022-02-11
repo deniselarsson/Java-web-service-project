@@ -1,6 +1,5 @@
 package com.example.personsrest.remote;
 
-import com.example.personsrest.domain.PersonDTO;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
@@ -9,10 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class GroupRemoteImpl implements GroupRemote{
 
@@ -71,25 +67,8 @@ public class GroupRemoteImpl implements GroupRemote{
                         MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(PersonDTO.class)
+                .bodyToMono(GroupDTO.class)
                 .toString();
-
-//                .block()
-//                .exchange()
-//                .expectStatus()
-//                .isOk()
-//                .expectHeader()
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .returnResult(PersonDTO.class)
-//                .getResponseBody()
-//                .blockLast();
-//        Objects.requireNonNull(webClient.delete().uri(BASE_URL + name)
-//                .header("Authorization",
-//                        "Bearer " + keyCloakToken.getAccessToken())
-//                .retrieve()
-//                .bodyToMono(GroupDTO.class)
-//                .block()).getId();
-        //return name;
     }
 
     @Value
