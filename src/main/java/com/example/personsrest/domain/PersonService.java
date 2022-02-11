@@ -18,11 +18,11 @@ public class PersonService {
     PersonRepository personRepository;
 
     public Stream<Person> findAll(String search, Integer pagenumber, Integer pagesize) {
-        if(search == null || search.isEmpty()){
+        if (search == null || search.isEmpty()) {
             return personRepository.findAll().stream();
         }
         Pageable paging = PageRequest.of(pagenumber, pagesize);
-       return personRepository.findAllByNameContainingOrCityContaining(search, search, paging).stream();
+        return personRepository.findAllByNameContainingOrCityContaining(search, search, paging).stream();
     }
 
     public Person createPerson(String name, int age, String city) {
@@ -54,23 +54,5 @@ public class PersonService {
 
     public void delete(String id) {
         personRepository.delete(id);
-    }
-
-    public List<Person> findAllList() {
-        return personRepository.findAll();
-    }
-
-    public Page<Person> findContains(String name) {
-        return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
-    }
-
-/*    public Page<Person> findPersonWithPagination(int offset, int pageSize){
-        Page<Person> personas = personRepository.findAll(PageRequest.of(offset, pageSize))
-    }*/
-
-    public Page<Person> findPage(String name, String city, Pageable pageable) {
-        return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
-        //return new PageImpl();
-        //Pageable paging = PageRequest.of(name, city, pageable);
     }
 }

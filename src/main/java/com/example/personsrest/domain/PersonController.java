@@ -29,20 +29,6 @@ public class PersonController {
                 .collect(Collectors.toList());
     }
 
-    /*@GetMapping("/?search={name}&pagenumber=0&pagesize=10")
-    public List<Person> findContains(@RequestParam("search") String search, @RequestParam("pagenumber") String pagenumber,
-                                     @RequestParam("pagesize") String pagesize) {
-        *//*return personService.find(search, pagenumber, pagesize)
-                .map(person -> this.toDTO(person))
-                .collect(Collectors.toList());*//*
-        return null;
-    }*/
-
-    @GetMapping("/findAllList")
-    public List<Person> findAllList() {
-        return personService.findAllList();
-    }
-
     @PostMapping
     public PersonDTO create(@RequestBody CreatePerson createPerson) {
         return toDTO(
@@ -84,17 +70,6 @@ public class PersonController {
             }
         }
         return toDTO(personService.save(person));
-    }
-
-    @GetMapping("/test/{namevar}")
-    public Page<Person> getAllPerson(
-            @PathVariable("namevar") String namevar,
-            @RequestParam(defaultValue = "Arne") String name,
-            @RequestParam(defaultValue = "Ankeborg") String city,
-            @PageableDefault(page = 1, size = 10) Pageable pageable) {
-        //List<Person> list = personService.findPage(name, city, pageable);
-        //return personService.findAllList();
-        return personService.findPage(name, city, pageable);
     }
 
     private PersonDTO toDTO(Person person) {
