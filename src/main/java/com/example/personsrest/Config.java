@@ -6,6 +6,7 @@ import com.example.personsrest.remote.GroupRemote;
 import com.example.personsrest.remote.GroupRemoteImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
 
 @Configuration
 public class Config {
@@ -18,4 +19,5 @@ public class Config {
     public PersonRepository personRepository() {
         return new PersonRepositoryImpl();
     }
+
 }

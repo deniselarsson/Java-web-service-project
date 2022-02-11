@@ -2,14 +2,13 @@ package com.example.personsrest.domain;
 
 import com.example.personsrest.remote.GroupRemote;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/persons/")
+@RequestMapping("/api/persons")
 @AllArgsConstructor
 public class PersonController {
 
@@ -17,24 +16,11 @@ public class PersonController {
     GroupRemote groupRemote;
 
     @GetMapping
-    public List<PersonDTO> findAll() {
-        return personService.findAll()
+    public List<PersonDTO> findAll(@RequestParam(value = "search", required = false) String search, @RequestParam(value = "pagenumber", required = false) Integer pagenumber,
+                                   @RequestParam(value = "pagesize", required = false) Integer pagesize) {
+        return personService.findAll(search, pagenumber, pagesize)
                 .map(person -> this.toDTO(person))
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/?search={name}&pagenumber=0&pagesize=10")
-    public List<Person> findContains(@RequestParam("search") String search, @RequestParam("pagenumber") String pagenumber,
-                                     @RequestParam("pagesize") String pagesize) {
-        /*return personService.find(search, pagenumber, pagesize)
-                .map(person -> this.toDTO(person))
-                .collect(Collectors.toList());*/
-        return null;
-    }
-
-    @GetMapping("/findAllList")
-    public List<Person> findAllList() {
-        return personService.findAllList();
     }
 
     @PostMapping

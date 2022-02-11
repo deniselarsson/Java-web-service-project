@@ -1,14 +1,12 @@
 package com.example.personsrest.domain;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 @Service
@@ -16,9 +14,12 @@ import java.util.stream.Stream;
 public class PersonService {
     PersonRepository personRepository;
 
-    public Stream<PersonEntity> findAll() {
-        return Stream.of(
-                new PersonEntity(UUID.randomUUID().toString(), "Arne Anka", "Ankeborg", 100, List.of()));
+    public Stream<Person> findAll(String search, Integer pagenumber, Integer pagesize) {
+        if (search == null || search.isEmpty()) {
+            return personRepository.findAll().stream();
+        }
+        Pageable paging = PageRequest.of(pagenumber, pagesize);
+        return personRepository.findAllByNameContainingOrCityContaining(search, search, paging).stream();
     }
 
     public Person createPerson(String name, int age, String city) {
@@ -50,18 +51,5 @@ public class PersonService {
 
     public void delete(String id) {
         personRepository.delete(id);
-    }
-
-    public List<Person> findAllList() {
-        return personRepository.findAll();
-    }
-
-    public Page<Person> findContains(String name) {
-        return personRepository.findAllByNameContainingOrCityContaining("Arne", "", Pageable.unpaged());
-    }
-
-    public Stream<Person> find(String search, String pagenumber, String pagesize) {
-        //return personRepository.findAllByNameContainingOrCityContaining(search, pagenumber, Pageable.unpaged());
-        return null;
     }
 }
