@@ -1,5 +1,6 @@
 package com.example.personsrest.domain;
 
+import com.example.personsrest.remote.GroupRemote;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class PersonService {
     PersonRepository personRepository;
+    GroupRemote groupRemote;
 
     public Stream<Person> findAll(String search, Integer pagenumber, Integer pagesize) {
         if (search == null || search.isEmpty()) {
@@ -38,11 +40,11 @@ public class PersonService {
     }
 
     public Person updatePerson(String id, String name, int age, String city) {
-        Person oldPerson = personRepository.findById(id).orElse(null);
-        oldPerson.setName(name);
-        oldPerson.setAge(age);
-        oldPerson.setCity(city);
-        return personRepository.save(oldPerson);
+        Person person = personRepository.findById(id).orElse(null);
+        person.setName(name);
+        person.setAge(age);
+        person.setCity(city);
+        return personRepository.save(person);
     }
 
     public Person save(Person person) {
@@ -51,5 +53,24 @@ public class PersonService {
 
     public void delete(String id) {
         personRepository.delete(id);
+    }
+
+    public Person addPersonToGroup(String id,String name){
+        var person = get(id);
+        var groupId = groupRemote.createGroup(name);
+        person.addGroup(groupId);
+        return save(person);
+    }
+
+    public Person removeGroup(String id, String name){
+        var person = get(id);
+        var groups = person.getGroups().toArray(new String[0]);
+        for (var groupId : groups) {
+            if (groupRemote.getNameById(groupId).equals(name)) {
+                groupRemote.removeGroup(name);
+                person.removeGroup(groupId);
+            }
+        }
+        return save(person);
     }
 }
