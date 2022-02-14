@@ -31,7 +31,7 @@ public class PersonRepositoryImpl implements PersonRepository {
             personsList.add(v);
         });
 
-        if(personsList.contains(name)) {
+        if (personsList.contains(name)) {
             Page pageList = (Page) personsList.stream().sorted().collect(Collectors.toList());
             return pageList;
         }

@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Duration;
 import java.util.Objects;
 
-public class GroupRemoteImpl implements GroupRemote{
+public class GroupRemoteImpl implements GroupRemote {
 
     private static final String BASE_URL = "api/groups/";
     private static final String WEB_CLIENT_URL = "https://groups.edu.sensera.se/";
@@ -19,7 +19,6 @@ public class GroupRemoteImpl implements GroupRemote{
     private final WebClient webClient;
     private final KeyCloakToken keyCloakToken;
     final int TIMEOUT = 30;
-
 
     public GroupRemoteImpl() {
         this.webClient = WebClient.create(WEB_CLIENT_URL);
@@ -88,5 +87,4 @@ public class GroupRemoteImpl implements GroupRemote{
     static class CreateGroupDTO {
         String name;
     }
-
 }

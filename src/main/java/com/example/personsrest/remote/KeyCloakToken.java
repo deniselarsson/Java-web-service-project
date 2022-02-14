@@ -45,7 +45,7 @@ public class KeyCloakToken {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
         return webClient.post()
-                .uri("auth/realms/"+realm+"/protocol/openid-connect/token")
+                .uri("auth/realms/" + realm + "/protocol/openid-connect/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("grant_type", "password")
                         .with("client_id", clientId)
@@ -54,7 +54,7 @@ public class KeyCloakToken {
                         .with("access_token", ""))
                 .retrieve()
                 .bodyToFlux(KeyCloakToken.class)
-                .onErrorMap(e -> new Exception("Failed to aquire token",e))
+                .onErrorMap(e -> new Exception("Failed to aquire token", e))
                 .last();
     }
 
